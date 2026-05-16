@@ -21,7 +21,7 @@ response = model.generate_content(
 )
 
 await update.message.reply_text(response.text)
-return
+
     if user_id not in users:
         users[user_id] = 0
 
