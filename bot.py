@@ -1,10 +1,11 @@
-import google.generativeai as genaifrom telegram import Update
+from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from docx import Document
 import asyncio
+import google.generativeai as genai
 
 TOKEN = "8750260288:AAGjHjCbD98_s9Z8uZi3TkP7DBY8nrmvPCk"
-GEMINI_API = "API_KEY"
+GEMINI_API = "AIzaSyDX5tkyRKQGTWiK8U83lfClfJwSU3VmZCI"
 
 genai.configure(api_key=GEMINI_API)
 
