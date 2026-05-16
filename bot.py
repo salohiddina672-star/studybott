@@ -2,25 +2,15 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from docx import Document
 import asyncio
-import google.generativeai as genai
 
 TOKEN = "8750260288:AAGjHjCbD98_s9Z8uZi3TkP7DBY8nrmvPCk"
-GEMINI_API = "AIzaSyDX5tkyRKQGTWiK8U83lfClfJwSU3VmZCI"
-
-genai.configure(api_key=GEMINI_API)
-
-model = genai.GenerativeModel("gemini-1.5-flash")
+API_KEY = "AIzaSyDX5tkyRKQGTWiK8U83lfClfJwSU3VmZCI"
 users = {}
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.message.from_user.id
     text = update.message.text
-response = model.generate_content(
-    f"Foydalanuvchiga batafsil va aqlli javob ber: {text}"
-)
-
-await update.message.reply_text(response.text)
 
     if user_id not in users:
         users[user_id] = 0
@@ -31,26 +21,34 @@ await update.message.reply_text(response.text)
         await update.message.reply_text("⏳ 4 minut kuting...")
         await asyncio.sleep(240)
 
-  response = model.generate_content(
-    f"Foydalanuvchiga batafsil javob ber: {text}"
-)
+    doc = Document()
 
-await update.message.reply_text(response.text)
+    doc.add_heading("Mustaqil ish", 0)
+
+    content = f"""
+Mavzu: {text}
+
+Kirish:
+Bu mavzu haqida ma'lumot.
+
+Asosiy qism:
+{text} haqida batafsil tushuntirish.
+
+Xulosa:
+Mavzu yakunlandi.
+"""
+
+    doc.add_paragraph(content)
 
     filename = "mustaqil_ish.docx"
-
     doc.save(filename)
 
-    await update.message.reply_document(
-        document=open(filename, "rb")
-    )
+    await update.message.reply_document(document=open(filename, "rb"))
 
 app = Application.builder().token(TOKEN).build()
 
-app.add_handler(
-    MessageHandler(filters.TEXT, reply)
-)
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, reply))
 
-print("Bot ishladi...")
+print("Bot ishga tushdi...")
 
 app.run_polling()
