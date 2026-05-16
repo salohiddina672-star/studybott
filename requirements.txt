@@ -1,8 +1,5 @@
 python-telegram-bot
 flask
 gunicorn
-python-telegram-bot
-flask
-gunicorn
 python-docx
 google-generativeai
