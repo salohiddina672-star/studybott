@@ -1,17 +1,27 @@
-from telegram import Update
+
+import google.generativeai as genaifrom telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from docx import Document
 import asyncio
 
 TOKEN = "8750260288:AAGjHjCbD98_s9Z8uZi3TkP7DBY8nrmvPCk"
+GEMINI_API = "API_KEY"
 
+genai.configure(api_key=GEMINI_API)
+
+model = genai.GenerativeModel("gemini-1.5-flash")
 users = {}
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.message.from_user.id
     text = update.message.text
+response = model.generate_content(
+    f"Foydalanuvchiga batafsil va aqlli javob ber: {text}"
+)
 
+await update.message.reply_text(response.text)
+return
     if user_id not in users:
         users[user_id] = 0
 
