@@ -1,4 +1,3 @@
-
 import google.generativeai as genaifrom telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from docx import Document
@@ -31,24 +30,11 @@ return
         await update.message.reply_text("⏳ 4 minut kuting...")
         await asyncio.sleep(240)
 
-    doc = Document()
+  response = model.generate_content(
+    f"Foydalanuvchiga batafsil javob ber: {text}"
+)
 
-    doc.add_heading("Mustaqil ish", 0)
-
-    content = f"""
-Mavzu: {text}
-
-Kirish:
-Bu mavzu haqida ma'lumot.
-
-Asosiy qism:
-AI yordamida tayyorlandi.
-
-Xulosa:
-Tayyor ish tugadi.
-"""
-
-    doc.add_paragraph(content)
+await update.message.reply_text(response.text)
 
     filename = "mustaqil_ish.docx"
 
